@@ -3,8 +3,6 @@
 # dependencies
 /frontend/node_modules
 
-/mard
-mard.zip
 
 # testing
 /coverage
@@ -23,3 +21,7 @@ mard.zip
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+/mard
+mard.zip
+/backend/__pycache__
