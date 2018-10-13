@@ -25,3 +25,4 @@ yarn-error.log*
 /mard
 mard.zip
 /backend/__pycache__
+/backend/data_wrangle/df_final.csv
