@@ -5,7 +5,7 @@ import './App.css'
 class App extends Component {
 
   componentDidMount() {
-    axios.get('http://localhost:5000/api/ping', { headers: ['Access-Control-Allow-Origin'] }).then(res => console.log(res))
+    axios.get('http://localhost:8000/api/ping').then(res => console.log(res))
   }
 
   render() {
@@ -19,4 +19,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default App
