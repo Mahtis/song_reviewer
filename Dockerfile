@@ -15,7 +15,7 @@ RUN npm run build
 WORKDIR /usr/src/app/backend
 
 RUN rm -r /usr/src/app/frontend
-RUN rm -r /usr/src/app/backend/static
+
 RUN mv /usr/src/app/backend/build/static /usr/src/app/backend/
 
 # execute everyone's favorite pip command, pip install -r
