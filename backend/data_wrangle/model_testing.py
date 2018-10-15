@@ -14,10 +14,12 @@ from sklearn.linear_model import LinearRegression
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import model_selection, feature_selection
+from sklearn.grid_search import GridSearchCV
+
 plt.style.use('seaborn-deep')
 
 #read data from csv
-df = pd.read_csv('df_final.csv')
+df = pd.read_csv('data_wrangle/df_final.csv')
 
 #drop reviews that have no score
 df = df.dropna(subset = ['overall']) 
@@ -70,6 +72,26 @@ print(rtc_model.score(X_test,y_test))
 result2=pd.DataFrame(rtc_model.predict(X_test))
 result2.plot.hist()
 print(result2[0].value_counts(),result2[0].value_counts(normalize=True))
+
+# param_grid = { "n_estimators"      : [10, 200],
+#            "criterion"         : ["gini"],
+#            "max_features"      : [3, 5],
+#            "max_depth"         : [10, 20],
+#            "min_samples_split" : [2, 4] ,
+#            "bootstrap": [True, False]}
+# grid_search = GridSearchCV(rtc, param_grid, n_jobs=-1, cv=2)
+# grid_search.fit(X_train, y_train)
+# print("grid search best params: ", grid_search.best_params_)
+
+# grid search best params:  
+# {'bootstrap': True, 'criterion': 'gini', 'max_depth': 20, 'max_features': 5, 'min_samples_split': 4, 'n_estimators': 200}
+
+# print("grid search best score ", grid_search.score(X_test, y_test))
+
+
+
+
+plt.show()
         
 """
 print(df.dtypes)
