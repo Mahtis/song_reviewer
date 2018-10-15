@@ -134,23 +134,24 @@ df_ones_and_fives = pd.concat([ones,fives])
 fig6, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2,2)
 
 ax1.set_ylim([110, 140])
-sns.stripplot(y='bpm', x='overall', data=df_ones_and_fives,ax=ax1, alpha=0.1)
-ax1.plot(1, good_song[13], 'bo')
-ax1.plot(0, bad_song[13], 'ro')
+ax1.plot(1, good_song[13], 'bo', zorder=2)
+ax1.plot(0, bad_song[13], 'ro', zorder=2)
+sns.stripplot(y='bpm', x='overall', data=df_ones_and_fives,ax=ax1, alpha=0.1, zorder=1)
+
 
 ax2.set_ylim([0.6, 2])
-sns.stripplot(y='danceability', x='overall', data=df_ones_and_fives,ax=ax2, alpha=0.1)
-ax2.plot(1, good_song[14], 'bo')
-ax2.plot(0, bad_song[14], 'ro')
+sns.stripplot(y='danceability', x='overall', data=df_ones_and_fives,ax=ax2, alpha=0.1, zorder=1)
+ax2.plot(1, good_song[14], 'bo', zorder=2)
+ax2.plot(0, bad_song[14], 'ro', zorder=2)
 
-sns.stripplot(y='length', x='overall', data=df_ones_and_fives,ax=ax3, alpha=0.1)
+sns.stripplot(y='length', x='overall', data=df_ones_and_fives,ax=ax3, alpha=0.1, zorder=1)
 ax3.set_ylim([0, 1000])
-ax3.plot(1, good_song[16], 'bo')
-ax3.plot(0, bad_song[16], 'ro')
+ax3.plot(1, good_song[16], 'bo', zorder=2)
+ax3.plot(0, bad_song[16], 'ro', zorder=2)
 
-sns.stripplot(y='dissonance', x='overall', data=df_ones_and_fives,ax=ax4, alpha=0.1)
-ax4.plot(1, good_song[5], 'bo')
-ax4.plot(0, bad_song[5], 'ro')
+sns.stripplot(y='dissonance', x='overall', data=df_ones_and_fives,ax=ax4, alpha=0.1, zorder=1)
+ax4.plot(1, good_song[5], 'bo', zorder=2)
+ax4.plot(0, bad_song[5], 'ro', zorder=2)
 ax4.set_ylim([0.35, 0.50])
 
 
