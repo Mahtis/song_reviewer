@@ -15,7 +15,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import model_selection, feature_selection
 from sklearn.grid_search import GridSearchCV
-
+import pickle
 plt.style.use('seaborn-deep')
 
 #read data from csv
@@ -95,6 +95,9 @@ print(rtc_best_model.score(X_test,y_test))
 result3=pd.DataFrame(rtc_best_model.predict(X_test))
 result3.plot.hist()
 print(result3[0].value_counts(),result3[0].value_counts(normalize=True))
+
+filename = 'song_review_rtc_model.sav'
+pickle.dump(rtc_best_model, open(filename, 'wb'))
 
 ########
 
