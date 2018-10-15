@@ -5,7 +5,9 @@
   "dependencies": {
     "axios": "^0.18.0",
     "react": "^16.5.2",
-    "react-dom": "^16.5.2"
+    "react-dom": "^16.5.2",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^0.82.5"
   },
   "devDependencies": {
     "react-scripts": "2.0.4"
@@ -15,7 +17,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "postbuild": "mv build ../backend/"
+    "postbuild": "mv build ../"
   },
   "eslintConfig": {
     "extends": "react-app"
