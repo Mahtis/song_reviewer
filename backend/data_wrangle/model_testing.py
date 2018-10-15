@@ -82,11 +82,22 @@ print(result2[0].value_counts(),result2[0].value_counts(normalize=True))
 # grid_search = GridSearchCV(rtc, param_grid, n_jobs=-1, cv=2)
 # grid_search.fit(X_train, y_train)
 # print("grid search best params: ", grid_search.best_params_)
-
 # grid search best params:  
-# {'bootstrap': True, 'criterion': 'gini', 'max_depth': 20, 'max_features': 5, 'min_samples_split': 4, 'n_estimators': 200}
-
+# {}
 # print("grid search best score ", grid_search.score(X_test, y_test))
+
+#### rfc with best params ####
+rtc_best = RandomForestClassifier(class_weight='balanced', bootstrap=True, criterion= 'gini', max_depth= 20, 
+max_features= 5, min_samples_split=4, n_estimators= 200)
+
+rtc_best_model = rtc_best.fit(X_train,y_train)
+print(rtc_best_model.score(X_test,y_test))
+result3=pd.DataFrame(rtc_best_model.predict(X_test))
+result3.plot.hist()
+print(result3[0].value_counts(),result3[0].value_counts(normalize=True))
+
+########
+
 
 
 
