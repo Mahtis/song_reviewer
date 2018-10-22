@@ -4,7 +4,7 @@ import { Button, Container, Form, Header, Input, Label, List, Loader, Segment } 
 import axios from 'axios'
 import './App.css'
 
-const API_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8000/api' : 'http://song_reviewer_backend:8000/api'
+const API_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8000/api' : 'http://song-reviewer.mahtisoft.com/api'
 
 class App extends Component {
   state = {
@@ -48,7 +48,7 @@ class App extends Component {
         <Header as="h1">Music review generator</Header>
         <Form onSubmit={this.submitForm}>
           <Label htmlFor="uploader">Select a song</Label>
-          <Input id="uploader" type="file" onChange={this.handleChange} />
+          <Input id="uploader" accept=".wav" type="file" onChange={this.handleChange} />
           <Button content="submit" type="submit" />
         </Form>
         {song ?
