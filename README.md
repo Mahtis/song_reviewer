@@ -3,7 +3,7 @@ Application to create automatic reviews from uploaded songs
 
 
 ## Setting up developments environment
-Song-reviewer backend is developed entirely through docker.
+Song-reviewer backend is developed entirely by running it in a docker container.
 - First you need to have docker installed on your machine https://www.docker.com/get-started.
 - Then use this magic spell to start the backend:
 ```docker run -p 8000:8000 -v /path/to/repository/song_reviewer/backend/:/usr/src/app/ mahtis/song_reviewer_backend```
@@ -15,3 +15,6 @@ After docker is finished building the image, the application should start runnin
 Instead of pulling the image from docker hub, you can also just call ```docker build . -tag song_reviewer_backend``` in the backend folder. This is a better option if you need to add imports, because the whole image needs to be rebuild in order to install the imports. You can use the same command as above to run, just remove the 'mahtis/' part from the end, so it matches the tag argument you gave it.
 
 Be vary that docker images can be quite large, and every time you build one, it is saved on your computer. Use ```docker images``` to see all the images you have in docker and remove all images that you don't need using ```docker rmi <IMAGE ID's separated by spaces>```
+
+### Frontend
+To run the frontend you should have nodejs installed on your computer. Then just navigate to ```frontend``` folder, run ```npm install``` and then ```npm start``` and the frontend should be running at localhost:3000. 
