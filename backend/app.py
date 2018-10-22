@@ -26,23 +26,6 @@ def upload():
                                               rhythmStats=['mean'],
                                               tonalStats=['mean'])('./temp.wav')
   row = []
-<<<<<<< HEAD
-  row.append(data['lowlevel']['spectral_complexity']['mean'])
-  row.append(data['lowlevel']['average_loudness'])
-  row.append(data['lowlevel']['dissonance']['mean'])
-  row.append(data['lowlevel']['pitch_salience']['mean'])
-  row.append(data['tonal']['tuning_frequency'])
-  row.append(data['tonal']['chords_strength']['mean'])
-  row.append(data['rhythm']['bpm'])
-  row.append(data['rhythm']['danceability'])
-  row.append(data['rhythm']['beats_count'])
-  row.append(data['metadata']['audio_properties']['length'])
-  
-  row.extend(map_key(data['tonal']['chords_key']))
-  #j = json.load('test.json')
-  # subprocess.call('./script.sh', shell=True)
-  print('called it')
-=======
   row.append(features['lowlevel.spectral_complexity.mean'])
   row.append(features['lowlevel.average_loudness'])
   row.append(features['lowlevel.dissonance.mean'])
@@ -70,7 +53,6 @@ def upload():
     'score': int(score[0])
   }
   # data['score'] = int(score[0])
->>>>>>> 270b91baca3bb9157983663110a3158c8b06bcf3
   return jsonify(data)
 
 # @app.route("/api/json")
