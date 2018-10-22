@@ -1,13 +1,16 @@
 import React, { Component } from 'react'
 import 'semantic-ui-css/semantic.min.css'
-import { Button, Container, Form, Header, Input, Label, List, Segment } from 'semantic-ui-react'
+import { Button, Container, Form, Header, Input, Label, List, Loader, Segment } from 'semantic-ui-react'
 import axios from 'axios'
 import './App.css'
+
+const API_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8000/api' : 'http://song_reviewer_backend:8000/api'
 
 class App extends Component {
   state = {
     song: undefined,
-    file: {}
+    file: {},
+    loading: false
   }
 
   componentDidMount() {
@@ -28,19 +31,20 @@ class App extends Component {
     }
   }
 
-  submitForm = (e) => {
+  submitForm = async (e) => {
     e.preventDefault()
     const form = new FormData()
     console.log(this.state.file)
     form.append('song', this.state.file)
-    axios.post('http://localhost:8000/api/upload', form).then((res) => this.setState({ song: res.data }))
+    await this.setState({ loading: true })
+    axios.post(`${API_URL}/upload`, form).then((res) => this.setState({ song: res.data, loading: false }))
   }
 
   render() {
-    const { song } = this.state
-    console.log(song)
+    const { song, loading } = this.state
     return (
       <Container>
+        <Loader active={loading} />
         <Header as="h1">Music review generator</Header>
         <Form onSubmit={this.submitForm}>
           <Label htmlFor="uploader">Select a song</Label>
