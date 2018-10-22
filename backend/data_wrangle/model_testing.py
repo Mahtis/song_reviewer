@@ -72,6 +72,14 @@ print(rtc_model.score(X_test,y_test))
 result2=pd.DataFrame(rtc_model.predict(X_test))
 result2.plot.hist()
 print(result2[0].value_counts(),result2[0].value_counts(normalize=True))
+print(x2.columns)
+
+test_subject = [[1, 3, 1.5, 0.01, 160, 1.5, 360, 0.1, 2000, 2000, 0, 0, 0, 1, 0, 0, 0 , 0]]
+Average_songs = [[15.64196263824093, 0.6826506867800174, 0.4484535703680573, 0.5321808437085632, 38.5357393618285, 0.5132998471541234, 122.87624119051739, 1.1225869303031197, 511.4659606656581, 253.45189149513433, 0, 0, 1, 0, 0, 0, 0, 0],
+[15.998103855433962, 0.7010364003535495, 0.4502715703447983, 0.528632954730562, 438.7370305151992, 0.5080946553629749, 124.06884334149247, 1.1496389228023156, 551.274425727412, 271.5967467157763, 0, 0, 1, 0, 0, 0, 0, 0]]
+
+print(rtc_model.predict(Average_songs))
+
 
 # param_grid = { "n_estimators"      : [10, 200],
 #            "criterion"         : ["gini"],
@@ -87,14 +95,14 @@ print(result2[0].value_counts(),result2[0].value_counts(normalize=True))
 # print("grid search best score ", grid_search.score(X_test, y_test))
 
 #### rfc with best params ####
-rtc_best = RandomForestClassifier(class_weight='balanced', bootstrap=True, criterion= 'gini', max_depth= 20, 
-max_features= 5, min_samples_split=4, n_estimators= 200)
+# rtc_best = RandomForestClassifier(class_weight='balanced', bootstrap=True, criterion= 'gini', max_depth= 20, 
+# max_features= 5, min_samples_split=4, n_estimators= 200)
 
-rtc_best_model = rtc_best.fit(X_train,y_train)
-print(rtc_best_model.score(X_test,y_test))
-result3=pd.DataFrame(rtc_best_model.predict(X_test))
-result3.plot.hist()
-print(result3[0].value_counts(),result3[0].value_counts(normalize=True))
+# rtc_best_model = rtc_best.fit(X_train,y_train)
+# print(rtc_best_model.score(X_test,y_test))
+# result3=pd.DataFrame(rtc_best_model.predict(X_test))
+# result3.plot.hist()
+# print(result3[0].value_counts(),result3[0].value_counts(normalize=True))
 
 ########
 
@@ -102,7 +110,7 @@ print(result3[0].value_counts(),result3[0].value_counts(normalize=True))
 
 
 
-plt.show()
+# plt.show()
         
 """
 print(df.dtypes)

@@ -45,8 +45,8 @@ def get_json():
   row.append(data['rhythm']['danceability'])
   row.append(data['rhythm']['beats_count'])
   row.append(data['metadata']['audio_properties']['length'])
-  row.append(data['tonal']['chords_key'])
- 
+  
+  row.extend(map_key(data['tonal']['chords_key']))
   #j = json.load('test.json')
   # subprocess.call('./script.sh', shell=True)
   print('called it')
@@ -64,8 +64,8 @@ def map_key(key):
     'G': [0, 0, 0, 0, 0, 0, 1, 0],
     'G#': [0, 0, 0, 0, 0, 0, 0, 1]
   }
-  if keys(key):
-    return keys(key)
+  if key in keys:
+    return keys[key]
   else:
     return [0, 0, 0, 0, 0, 0, 0, 0]
 

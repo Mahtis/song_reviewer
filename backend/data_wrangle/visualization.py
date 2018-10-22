@@ -81,11 +81,11 @@ fig3.tight_layout(rect=[0, 0.03, 1, 0.95])
 fig4.tight_layout(rect=[0, 0.03, 1, 0.95])
 fig5.tight_layout(rect=[0, 0.03, 1, 0.95])
 
-fig1.savefig('fig1.png')
-fig2.savefig('fig2.png')
-fig3.savefig('fig3.png')
-fig4.savefig('fig4.png')
-fig5.savefig('fig5.png')
+# fig1.savefig('fig1.png')
+# fig2.savefig('fig2.png')
+# fig3.savefig('fig3.png')
+# fig4.savefig('fig4.png')
+# fig5.savefig('fig5.png')
 
 
 ###
@@ -156,6 +156,6 @@ ax4.set_ylim([0.35, 0.50])
 
 
 fig6.tight_layout(rect=[0, 0.03, 1, 0.95])
-fig6.savefig('fig6.png')
+# fig6.savefig('fig6.png')
 # plt.show()
 
