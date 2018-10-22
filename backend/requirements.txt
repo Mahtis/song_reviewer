@@ -1,3 +1,7 @@
 flask-cors
 essentia
 Flask == 1.0.2
+python-dotenv
+pandas
+sklearn
+numpy

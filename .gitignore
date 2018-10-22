@@ -10,10 +10,36 @@
 # production
 /backend/build
 /backend/static
+/backend/__pycache__
+/backend/data_wrangle/df_final.csv
+/backend/.DS_Store
+/backend/.env
+/backend/.flaskenv
+/backend/*.pyc
+/backend/*.pyo
+/backend/env/
+/backend/env*
+/backend/dist/
+/backend/build/
+/backend/*.egg
+/backend/*.egg-info/
+/backend/_mailinglist
+/backend/.tox/
+/backend/.cache/
+/backend/.pytest_cache/
+/backend/.idea/
+/backend/docs/_build/
+
+# Coverage reports
+/backend/htmlcov/
+/backend/.coverage
+/backend/.coverage.*
+/backend/*,cover
 
 # misc
 /.vscode
 .DS_Store
+.env
 .env.local
 .env.development.local
 .env.test.local
@@ -25,5 +51,3 @@ yarn-error.log*
 
 /mard
 mard.zip
-/backend/__pycache__
-/backend/data_wrangle/df_final.csv
