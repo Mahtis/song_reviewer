@@ -5,7 +5,10 @@ import os
 import os.path
 import json
 from dotenv import load_dotenv
-from data_wrangle.model_testing import ReviewModel
+from data_wrangle.rfc_model import ReviewModel
+from data_wrangle.nn_model import NnModel
+from data_wrangle.text_review import Reviewer
+
 import essentia
 import essentia.standard as es
 
@@ -13,6 +16,8 @@ app = Flask(__name__)
 CORS(app)
 load_dotenv()
 model = ReviewModel()
+nn_model = NnModel()
+reviewer = Reviewer()
 
 @app.route("/api/ping")
 def ping():
@@ -37,7 +42,10 @@ def upload():
   row.append(features['rhythm.beats_count'])
   row.append(features['metadata.audio_properties.length'])
   row.extend(map_key(features['tonal.chords_key']))
+
   score = model.predict(row)
+  neighbors = nn_model.kneighbors(row)
+  review = reviewer.generate(neighbors[0])
   data = {
     'spectral_complexity': features['lowlevel.spectral_complexity.mean'],
     'average_loudness': features['lowlevel.average_loudness'],
@@ -50,7 +58,9 @@ def upload():
     'beats_count': features['rhythm.beats_count'],
     'length': features['metadata.audio_properties.length'],
     'chords_key': features['tonal.chords_key'],
-    'score': int(score[0])
+    'score': int(score[0]),
+    'neighbors': str(neighbors[0]),
+    'review': review
   }
   # data['score'] = int(score[0])
   return jsonify(data)
