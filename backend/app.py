@@ -68,7 +68,6 @@ def upload():
 @app.route('/api/attributes', methods=['POST'])
 def attributes():
   features = request.get_json()
-  print(features)
   row = []
   row.append(features['spectral_complexity'])
   row.append(features['average_loudness'])
@@ -81,7 +80,10 @@ def attributes():
   row.append(features['beats_count'])
   row.append(features['length'])
   row.extend(map_key(features['chords_key']))
+  
   score = model.predict(row)
+  neighbors = nn_model.kneighbors(row)
+  review = reviewer.generate(neighbors[0])
   data = {
     'spectral_complexity': features['spectral_complexity'],
     'average_loudness': features['average_loudness'],
@@ -94,37 +96,12 @@ def attributes():
     'beats_count': features['beats_count'],
     'length': features['length'],
     'chords_key': features['chords_key'],
-    'score': int(score[0])
+    'score': int(score[0]),
+    'neighbors': str(neighbors[0]),
+    'review': review
   }
   # data['score'] = int(score[0])
   return jsonify(data)
-
-# @app.route("/api/json")
-# def get_json():
-#   print('executing')
-#   with open('test.json') as data_file:    
-#     data = json.load(data_file)
-#   print(data['lowlevel']['average_loudness'])
-#   row = []
-#   row.append(data['lowlevel']['spectral_complexity']['mean'])
-#   row.append(data['lowlevel']['average_loudness'])
-#   row.append(data['lowlevel']['dissonance']['mean'])
-#   row.append(data['lowlevel']['pitch_salience']['mean'])
-#   row.append(data['tonal']['tuning_frequency'])
-#   row.append(data['tonal']['chords_strength']['mean'])
-#   row.append(data['rhythm']['bpm'])
-#   row.append(data['rhythm']['danceability'])
-#   row.append(data['rhythm']['beats_count'])
-#   row.append(data['metadata']['audio_properties']['length'])
-#   row.extend(map_key(data['tonal']['chords_key']))
-#   #j = json.load('test.json')
-#   # subprocess.call('./script.sh', shell=True)
-#   print(row)
-#   print('called it')
-#   score = model.predict(row)
-#   print(score[0])
-#   data['score'] = int(score[0])
-#   return jsonify(data)
 
 def map_key(key):
   # A#, C, D, D#, E, F#, G, G# 
