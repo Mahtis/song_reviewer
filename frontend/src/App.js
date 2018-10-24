@@ -73,10 +73,11 @@ class App extends Component {
             
             <List.Item>audio_properties length: {song.length.toFixed(2)}</List.Item>
           </List>
+          
           <Header as="h2" content="Song review" />
           <Header as="h3" content={`Score: ${song.score}/5`} />
           <Segment>
-            This song is definately _____. The sound is really ____.
+              {song.review.map(i => <div>{i}</div>) }
           </Segment>
           <Header as="h3" content="Estimated popularity: 500k views on Youtube" />
         </div>

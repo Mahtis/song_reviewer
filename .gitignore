@@ -51,3 +51,6 @@ yarn-error.log*
 
 /mard
 mard.zip
+
+song_review_nn_model.joblib
+song_review_rtc_model.joblib

@@ -5,7 +5,10 @@ import os
 import os.path
 import json
 from dotenv import load_dotenv
-from data_wrangle.model_testing import ReviewModel
+from data_wrangle.rfc_model import ReviewModel
+from data_wrangle.nn_model import NnModel
+from data_wrangle.text_review import Reviewer
+
 import essentia
 import essentia.standard as es
 
@@ -13,6 +16,8 @@ app = Flask(__name__)
 CORS(app)
 load_dotenv()
 model = ReviewModel()
+nn_model = NnModel()
+reviewer = Reviewer()
 
 @app.route("/api/ping")
 def ping():
@@ -37,7 +42,10 @@ def upload():
   row.append(features['rhythm.beats_count'])
   row.append(features['metadata.audio_properties.length'])
   row.extend(map_key(features['tonal.chords_key']))
+
   score = model.predict(row)
+  neighbors = nn_model.kneighbors(row)
+  review = reviewer.generate(neighbors[0])
   data = {
     'spectral_complexity': features['lowlevel.spectral_complexity.mean'],
     'average_loudness': features['lowlevel.average_loudness'],
@@ -50,37 +58,12 @@ def upload():
     'beats_count': features['rhythm.beats_count'],
     'length': features['metadata.audio_properties.length'],
     'chords_key': features['tonal.chords_key'],
-    'score': int(score[0])
+    'score': int(score[0]),
+    'neighbors': str(neighbors[0]),
+    'review': review
   }
   # data['score'] = int(score[0])
   return jsonify(data)
-
-# @app.route("/api/json")
-# def get_json():
-#   print('executing')
-#   with open('test.json') as data_file:    
-#     data = json.load(data_file)
-#   print(data['lowlevel']['average_loudness'])
-#   row = []
-#   row.append(data['lowlevel']['spectral_complexity']['mean'])
-#   row.append(data['lowlevel']['average_loudness'])
-#   row.append(data['lowlevel']['dissonance']['mean'])
-#   row.append(data['lowlevel']['pitch_salience']['mean'])
-#   row.append(data['tonal']['tuning_frequency'])
-#   row.append(data['tonal']['chords_strength']['mean'])
-#   row.append(data['rhythm']['bpm'])
-#   row.append(data['rhythm']['danceability'])
-#   row.append(data['rhythm']['beats_count'])
-#   row.append(data['metadata']['audio_properties']['length'])
-#   row.extend(map_key(data['tonal']['chords_key']))
-#   #j = json.load('test.json')
-#   # subprocess.call('./script.sh', shell=True)
-#   print(row)
-#   print('called it')
-#   score = model.predict(row)
-#   print(score[0])
-#   data['score'] = int(score[0])
-#   return jsonify(data)
 
 def map_key(key):
   # A#, C, D, D#, E, F#, G, G# 
