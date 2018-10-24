@@ -11,6 +11,7 @@
 /backend/build
 /backend/static
 /backend/__pycache__
+/backend/data_wrangle/__pycache__
 /backend/data_wrangle/df_final.csv
 /backend/.DS_Store
 /backend/.env
@@ -51,3 +52,4 @@ yarn-error.log*
 
 /mard
 mard.zip
+*.wav
