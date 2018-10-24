@@ -55,6 +55,40 @@ def upload():
   # data['score'] = int(score[0])
   return jsonify(data)
 
+@app.route('/api/attributes', methods=['POST'])
+def attributes():
+  features = request.get_json()
+  print(features)
+  row = []
+  row.append(features['spectral_complexity'])
+  row.append(features['average_loudness'])
+  row.append(features['dissonance'])
+  row.append(features['pitch_salience'])
+  row.append(features['tuning_frequency'])
+  row.append(features['chords_strength'])
+  row.append(features['bpm'])
+  row.append(features['danceability'])
+  row.append(features['beats_count'])
+  row.append(features['length'])
+  row.extend(map_key(features['chords_key']))
+  score = model.predict(row)
+  data = {
+    'spectral_complexity': features['spectral_complexity'],
+    'average_loudness': features['average_loudness'],
+    'dissonance': features['dissonance'],
+    'pitch_salience': features['pitch_salience'],
+    'tuning_frequency': features['tuning_frequency'],
+    'chords_strength': features['chords_strength'],
+    'bpm': features['bpm'],
+    'danceability': features['danceability'],
+    'beats_count': features['beats_count'],
+    'length': features['length'],
+    'chords_key': features['chords_key'],
+    'score': int(score[0])
+  }
+  # data['score'] = int(score[0])
+  return jsonify(data)
+
 # @app.route("/api/json")
 # def get_json():
 #   print('executing')
