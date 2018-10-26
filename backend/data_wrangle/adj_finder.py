@@ -8,7 +8,7 @@ import pandas as pd
 import nltk 
 nltk.download('averaged_perceptron_tagger')
 nltk.download('punkt')
-class tagFinder:    
+class TagFinder:    
     def __init__(self):
         df = pd.read_csv('data_wrangle/df_final.csv')
         df = df.dropna(subset=['reviewText'])['reviewText']
