@@ -63,6 +63,6 @@ class NnModel:
             model = self.fit_model()
         return model
 
-    def kneighbors(self, row):
-        return self.model.kneighbors([row], return_distance=False)
+    def kneighbors(self, k, row):
+        return self.model.kneighbors([row], k, return_distance=False)
 

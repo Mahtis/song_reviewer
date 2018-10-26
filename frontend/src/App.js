@@ -68,6 +68,7 @@ class App extends Component {
     this.setState({ customValues })
   }
 
+
   render() {
     console.log(this.state)
     const { song, loading, customValues } = this.state
@@ -112,7 +113,11 @@ class App extends Component {
           <Header as="h2" content="Song review" />
           <Header as="h3" content={`Score: ${song.score}/5`} />
           <Segment>
-              {song.review.map(i => <div>{i}</div>) }
+              {song.review.map(i => <div key={i}>{i}</div>) }
+          </Segment>
+          <Header as="h3" content="Similar songs:" />
+          <Segment>
+              {song.similar_songs.map(s => <div key={s.title}>{s.artist} - {s.title} ({s.genre})</div>)}
           </Segment>
           <Header as="h3" content="Estimated popularity: 500k views on Youtube" />
         </Grid.Column>
