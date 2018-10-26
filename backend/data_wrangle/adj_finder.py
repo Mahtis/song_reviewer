@@ -24,7 +24,7 @@ class tagFinder:
                 if item[1]=='JJ':
                     adjs.append(item[0].lower())
                     tags = pd.DataFrame(adjs)
-        return tags[0].value_counts()[0:10]
+        return tags[0].value_counts()[0:10].keys().tolist()
     
 
 
