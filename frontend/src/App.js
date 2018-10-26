@@ -61,9 +61,10 @@ class App extends Component {
       .then((res) => this.setState({ song: res.data, loading: false }))
   }
 
-  changeValue = (e, { value }) => {
+  changeValue = (e) => {
     const customValues = { ...this.state.customValues }
-    customValues[e.target.name] = e.target.name === 'chords_key' ? value : Number(value)
+    customValues[e.target.name] = e.target.name === 'chords_key'
+      ? e.target.value : Number(e.target.value)
     this.setState({ customValues })
   }
 
@@ -123,113 +124,132 @@ class App extends Component {
             <List>
               <List.Item>
                 average_loudness:
-                <Input
+                <input
                   name='average_loudness'
-                  type="number"
-                  size="mini"
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.01}
                   value={customValues.average_loudness}
                   onChange={this.changeValue}
-                />
+                /> {customValues.average_loudness}
               </List.Item>
               <List.Item>
                 dissonance:
-                <Input
+                <input
                   name='dissonance'
-                  type="number"
-                  size="mini"
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.01}
                   value={customValues.dissonance}
                   onChange={this.changeValue}
-                />
+                /> {customValues.dissonance}
               </List.Item>
               <List.Item>
                 pitch_salience:
-                <Input
+                <input
                   name='pitch_salience'
-                  type="number"
-                  size="mini"
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.01}
                   value={customValues.pitch_salience}
                   onChange={this.changeValue}
-                />
+                />{customValues.pitch_salience}
               </List.Item>
               <List.Item>
                 spectral_complexity:
-                <Input
+                <input
                   name='spectral_complexity'
-                  type="number"
-                  size="mini"
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.01}
                   value={customValues.spectral_complexity}
                   onChange={this.changeValue}
-                />
+                /> {customValues.spectral_complexity}
               </List.Item>
               <List.Item>
                 chords_key:
-                <Input
+                <input
                   name='chords_key'
                   type="text"
-                  size="mini"
                   value={customValues.chords_key}
                   onChange={this.changeValue}
                 />
               </List.Item>
               <List.Item>
                 tuning_frequency:
-                <Input
+                <input
                   name='tuning_frequency'
-                  type="number"
-                  size="mini"
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.01}
                   value={customValues.tuning_frequency}
                   onChange={this.changeValue}
-                />
+                /> {customValues.tuning_frequency}
               </List.Item>
               <List.Item>
                 chords_strength:
-                <Input
+                <input
                   name='chords_strength'
-                  type="number"
-                  size="mini"
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.01}
                   value={customValues.chords_strength}
                   onChange={this.changeValue}
-                />
+                /> {customValues.chords_strength}
               </List.Item>
               <List.Item>
                 bpm:
-                <Input
+                <input
                   name='bpm'
-                  type="number"
-                  size="mini"
+                  type="range"
+                  min={0}
+                  max={500}
+                  step={1}
                   value={customValues.bpm}
                   onChange={this.changeValue}
-                />
+                /> {customValues.bpm}
               </List.Item>
               <List.Item>
                 danceability:
-                <Input
+                <input
                   name='danceability'
-                  type="number"
-                  size="mini"
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.01}
                   value={customValues.danceability}
                   onChange={this.changeValue}
-                />
+                /> {customValues.danceability}
               </List.Item>
               <List.Item>
                 beats_count:
-                <Input
+                <input
                   name='beats_count'
-                  type="number"
-                  size="mini"
+                  type="range"
+                  min={0}
+                  max={1000}
+                  step={1}
                   value={customValues.beats_count}
                   onChange={this.changeValue}
-                />
+                /> {customValues.beats_count}
               </List.Item>
               <List.Item>
                 length:
-                <Input
+                <input
                   name='length'
-                  type="number"
-                  size="mini"
+                  type="range"
+                  min={0}
+                  max={1000}
+                  step={1}
                   value={customValues.length}
                   onChange={this.changeValue}
-                />
+                /> {customValues.length}
               </List.Item>
             </List>
           </Form>
