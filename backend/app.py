@@ -9,6 +9,7 @@ from data_wrangle.rfc_model import ReviewModel
 from data_wrangle.nn_model import NnModel
 from data_wrangle.text_review import Reviewer
 from data_wrangle.dataset_manager import datasetManager
+from data_wrangle.adj_finder import TagFinder
 import essentia
 import essentia.standard as es
 
@@ -19,6 +20,7 @@ model = ReviewModel()
 nn_model = NnModel()
 reviewer = Reviewer()
 datasetManager = datasetManager()
+tagger = TagFinder()
 
 @app.route("/api/ping")
 def ping():
@@ -49,6 +51,7 @@ def upload():
   review = reviewer.generate(neighbors[0])
   nearest_neighbors = nn_model.kneighbors(15, row)
   similar_songs = datasetManager.get_similar_songs(nearest_neighbors[0])
+  tags = tagger.generate(neighbors[0][:100])
 
   data = {
     'spectral_complexity': features['lowlevel.spectral_complexity.mean'],
@@ -66,7 +69,8 @@ def upload():
     'neighbors': str(neighbors[0]),
     'review': review,
     'nearest': str(nearest_neighbors[0]),
-    'similar_songs': similar_songs
+    'similar_songs': similar_songs,
+    'tags':tags
 
   }
   # data['score'] = int(score[0])
@@ -93,7 +97,7 @@ def attributes():
   review = reviewer.generate(neighbors[0])
   nearest_neighbors = nn_model.kneighbors(15, row)
   similar_songs = datasetManager.get_similar_songs(nearest_neighbors[0])
-
+  tags = tagger.generate(neighbors[0][:100])
   data = {
     'spectral_complexity': features['spectral_complexity'],
     'average_loudness': features['average_loudness'],
@@ -109,7 +113,8 @@ def attributes():
     'score': int(score[0]),
     'neighbors': str(neighbors[0]),
     'review': review,
-    'similar_songs': similar_songs
+    'similar_songs': similar_songs,
+    'tags':tags
   }
   # data['score'] = int(score[0])
   return jsonify(data)
