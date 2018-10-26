@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from data_wrangle.rfc_model import ReviewModel
 from data_wrangle.nn_model import NnModel
 from data_wrangle.text_review import Reviewer
-
+from data_wrangle.dataset_manager import datasetManager
 import essentia
 import essentia.standard as es
 
@@ -18,6 +18,7 @@ load_dotenv()
 model = ReviewModel()
 nn_model = NnModel()
 reviewer = Reviewer()
+datasetManager = datasetManager()
 
 @app.route("/api/ping")
 def ping():
@@ -44,8 +45,11 @@ def upload():
   row.extend(map_key(features['tonal.chords_key']))
 
   score = model.predict(row)
-  neighbors = nn_model.kneighbors(row)
+  neighbors = nn_model.kneighbors(1000, row)
   review = reviewer.generate(neighbors[0])
+  nearest_neighbors = nn_model.kneighbors(15, row)
+  similar_songs = datasetManager.get_similar_songs(nearest_neighbors[0])
+
   data = {
     'spectral_complexity': features['lowlevel.spectral_complexity.mean'],
     'average_loudness': features['lowlevel.average_loudness'],
@@ -60,7 +64,10 @@ def upload():
     'chords_key': features['tonal.chords_key'],
     'score': int(score[0]),
     'neighbors': str(neighbors[0]),
-    'review': review
+    'review': review,
+    'nearest': str(nearest_neighbors[0]),
+    'similar_songs': similar_songs
+
   }
   # data['score'] = int(score[0])
   return jsonify(data)
@@ -82,8 +89,11 @@ def attributes():
   row.extend(map_key(features['chords_key']))
   
   score = model.predict(row)
-  neighbors = nn_model.kneighbors(row)
+  neighbors = nn_model.kneighbors(1000, row)
   review = reviewer.generate(neighbors[0])
+  nearest_neighbors = nn_model.kneighbors(15, row)
+  similar_songs = datasetManager.get_similar_songs(nearest_neighbors[0])
+
   data = {
     'spectral_complexity': features['spectral_complexity'],
     'average_loudness': features['average_loudness'],
@@ -98,7 +108,8 @@ def attributes():
     'chords_key': features['chords_key'],
     'score': int(score[0]),
     'neighbors': str(neighbors[0]),
-    'review': review
+    'review': review,
+    'similar_songs': similar_songs
   }
   # data['score'] = int(score[0])
   return jsonify(data)

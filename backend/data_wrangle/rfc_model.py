@@ -50,9 +50,9 @@ class ReviewModel:
         X_train, X_test, y_train, y_test = model_selection.train_test_split(x2,y2,test_size=0.2)
 
         #### rfc with best params ####
-
-        class_weight = dict({1:0.99, 2:0.001, 3:0.002, 4:0.003, 5:0.001})
-        rtc_best = RandomForestClassifier(class_weight='balanced', bootstrap=True, criterion= 'gini', max_depth= 30, 
+        class_weight = dict({1:0.996, 2:0.001, 3:0.001, 4:0.0015, 5:0.0005})
+        # class_weight = dict({1:0.70, 2:0.15, 3:0.1, 4:0.049, 5:0.001})
+        rtc_best = RandomForestClassifier(class_weight=class_weight, bootstrap=True, criterion= 'gini', max_depth= 30, 
         max_features='auto', min_samples_split=4, n_estimators= 300)
 
         ## export model ##
