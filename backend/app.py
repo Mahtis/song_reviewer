@@ -51,7 +51,7 @@ def upload():
   review = reviewer.generate(neighbors[0])
   nearest_neighbors = nn_model.kneighbors(15, row)
   similar_songs = datasetManager.get_similar_songs(nearest_neighbors[0])
-  tags = tagger.generate(neighbors[0][:100])
+  tags = tagger.generate(nearest_neighbors[0])
 
   data = {
     'spectral_complexity': features['lowlevel.spectral_complexity.mean'],
@@ -97,7 +97,7 @@ def attributes():
   review = reviewer.generate(neighbors[0])
   nearest_neighbors = nn_model.kneighbors(15, row)
   similar_songs = datasetManager.get_similar_songs(nearest_neighbors[0])
-  tags = tagger.generate(neighbors[0][:100])
+  tags = tagger.generate(nearest_neighbors[0])
   data = {
     'spectral_complexity': features['spectral_complexity'],
     'average_loudness': features['average_loudness'],
@@ -114,7 +114,7 @@ def attributes():
     'neighbors': str(neighbors[0]),
     'review': review,
     'similar_songs': similar_songs,
-    'tags':tags
+    'tags': tags
   }
   # data['score'] = int(score[0])
   return jsonify(data)
