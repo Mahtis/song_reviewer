@@ -6,25 +6,28 @@ import './App.css'
 
 const API_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8000/api' : 'http://song-reviewer.mahtisoft.com/api'
 
+// Plz no steling this okthx
+const YOUTUBE_API_KEY = 'AIzaSyDfbfuc5Z7rpdeWyC4AG2t5TNtfjJRHTSE'
+
 class App extends Component {
   state = {
     song: undefined,
     customValues: {
-      average_loudness: 0,
-      dissonance: 0,
-      pitch_salience: 0,
-      spectral_complexity: 0,
-      chords_key: 'C',
-      tuning_frequency: 0,
-      chords_strength: 0,
-      bpm: 0,
-      danceability: 0,
-      beats_count: 0,
-      length: 0,
-      score: 0
+      average_loudness: 0.9,
+      dissonance: 0.5,
+      pitch_salience: 0.5,
+      spectral_complexity: 38,
+      chords_key: 'C#',
+      tuning_frequency: 440,
+      chords_strength: 0.5,
+      bpm: 92,
+      danceability: 1.2,
+      beats_count: 164,
+      length: 107
     },
     file: {},
-    loading: false
+    loading: false,
+    youtubePredictions: undefined
   }
 
   componentDidMount() {
@@ -61,6 +64,50 @@ class App extends Component {
       .then((res) => this.setState({ song: res.data, loading: false }))
   }
 
+  getYoutubeViews = async () => {
+    const { similar_songs: songs } = this.state.song
+    const songAmounts = await Promise.all(songs.map(async song => {
+      const searchResults = await axios.get('https://www.googleapis.com/youtube/v3/search', {
+        params: {
+          key: YOUTUBE_API_KEY,
+          part: 'snippet',
+          type: 'video',
+          q: `${song.artist} ${song.title}`
+        }
+      })
+      const stats = await Promise.all(searchResults.data.items.map(async (video) => {
+        const videoStats = await axios.get('https://www.googleapis.com/youtube/v3/videos', {
+          params: {
+            id: video.id.videoId,
+            key: YOUTUBE_API_KEY,
+            part: 'statistics'
+          }
+        })
+        return { 
+          views: Number(videoStats.data.items[0].statistics.viewCount) || 0,
+          likes: Number(videoStats.data.items[0].statistics.likeCount) || 0,
+          dislikes: Number(videoStats.data.items[0].statistics.dislikeCount || 0)
+        }
+      }))
+      const songStats = stats.reduce((acc, cur) => ({
+        views: acc.views + cur.views,
+        likes: acc.likes + cur.likes,
+        dislikes: acc.dislikes + cur.dislikes
+      }), { views: 0, likes: 0, dislikes: 0 })
+      console.log('song stats', songStats)
+      return songStats
+    }))
+    const predictions = songAmounts.reduce((acc, cur) => ({
+      views: acc.views + (cur.views / songAmounts.length),
+      likes: acc.likes + (cur.likes / songAmounts.length),
+      dislikes: acc.dislikes + (cur.dislikes / songAmounts.length)
+    }), { views: 0, likes: 0, dislikes: 0 })
+    console.log('predictions', predictions)
+    this.setState({ youtubePredictions: predictions })
+    // https://www.googleapis.com/youtube/v3/search?key=AIzaSyDfbfuc5Z7rpdeWyC4AG2t5TNtfjJRHTSE&part=snippet&type=video&q=surfing
+    // https://www.googleapis.com/youtube/v3/videos?id=7lCDEYXw3mM&key=AIzaSyDfbfuc5Z7rpdeWyC4AG2t5TNtfjJRHTSE&part=statistics
+  }
+
   changeValue = (e) => {
     const customValues = { ...this.state.customValues }
     customValues[e.target.name] = e.target.name === 'chords_key'
@@ -71,7 +118,7 @@ class App extends Component {
 
   render() {
     console.log(this.state)
-    const { song, loading, customValues } = this.state
+    const { song, loading, customValues, youtubePredictions } = this.state
     return (
       <Container>
         <Grid columns={2}>
@@ -112,6 +159,9 @@ class App extends Component {
           
           <Header as="h2" content="Song review" />
           <Header as="h3" content={`Score: ${song.score}/5`} />
+          <Header as="h3">
+            Tags related to this song: {song.tags.map(tag => <Label>{tag}</Label>)}
+          </Header>
           <Segment>
               {song.review.map(i => <div key={i}>{i}</div>) }
           </Segment>
@@ -119,7 +169,15 @@ class App extends Component {
           <Segment>
               {song.similar_songs.map(s => <div key={s.title}>{s.artist} - {s.title} ({s.genre})</div>)}
           </Segment>
-          <Header as="h3" content="Estimated popularity: 500k views on Youtube" />
+          {youtubePredictions 
+            ? <Header as="h3" content={`Estimated popularity:
+            ${Math.floor(youtubePredictions.views)} views on Youtube, with
+            ${Math.floor(youtubePredictions.likes)} likes and
+            ${Math.floor(youtubePredictions.dislikes)} dislikes`} />
+            : <Header as="h3">
+                The popularity of your song is not yet calculated
+                <Button content="click here to calculate!" onClick={this.getYoutubeViews}/>
+              </Header>}
         </Grid.Column>
         : undefined}
         <Grid.Column>
@@ -169,8 +227,8 @@ class App extends Component {
                   name='spectral_complexity'
                   type="range"
                   min={0}
-                  max={1}
-                  step={0.01}
+                  max={50}
+                  step={0.1}
                   value={customValues.spectral_complexity}
                   onChange={this.changeValue}
                 /> {customValues.spectral_complexity}
@@ -190,8 +248,8 @@ class App extends Component {
                   name='tuning_frequency'
                   type="range"
                   min={0}
-                  max={1}
-                  step={0.01}
+                  max={600}
+                  step={1}
                   value={customValues.tuning_frequency}
                   onChange={this.changeValue}
                 /> {customValues.tuning_frequency}
@@ -214,7 +272,7 @@ class App extends Component {
                   name='bpm'
                   type="range"
                   min={0}
-                  max={500}
+                  max={300}
                   step={1}
                   value={customValues.bpm}
                   onChange={this.changeValue}
@@ -226,7 +284,7 @@ class App extends Component {
                   name='danceability'
                   type="range"
                   min={0}
-                  max={1}
+                  max={2}
                   step={0.01}
                   value={customValues.danceability}
                   onChange={this.changeValue}
@@ -238,7 +296,7 @@ class App extends Component {
                   name='beats_count'
                   type="range"
                   min={0}
-                  max={1000}
+                  max={500}
                   step={1}
                   value={customValues.beats_count}
                   onChange={this.changeValue}
@@ -250,7 +308,7 @@ class App extends Component {
                   name='length'
                   type="range"
                   min={0}
-                  max={1000}
+                  max={500}
                   step={1}
                   value={customValues.length}
                   onChange={this.changeValue}
