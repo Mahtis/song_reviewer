@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import 'semantic-ui-css/semantic.min.css'
-import { Button, Container, Form, Grid, Header, Input, Label, List, Loader, Segment } from 'semantic-ui-react'
+import { Button, Container, Dimmer, Form, Grid, Header, Icon, Input, Label, List, Loader, Message, Segment } from 'semantic-ui-react'
 import axios from 'axios'
 import './App.css'
 
@@ -120,20 +120,30 @@ class App extends Component {
     console.log(this.state)
     const { song, loading, customValues, youtubePredictions } = this.state
     return (
-      <Container>
+      <Container style={{background: '#F7F5F4'}}>
         <Grid columns={2}>
           <Grid.Row>
             <Grid.Column>
-        <Loader active={loading} />
-        <Header as="h1">Music review generator</Header>
-        <Form onSubmit={this.submitForm}>
-          <Label htmlFor="uploader">Select a song</Label>
-          <Input id="uploader" accept=".wav" type="file" onChange={this.handleChange} />
-          <Button content="submit" type="submit" />
-        </Form>
-        </Grid.Column>
-        </Grid.Row>
+              <Header as="h1"><Header.Subheader>Welcome to the</Header.Subheader>Music review generator</Header>
+              <Message floating info>
+                <p>This great application helps you see, how good that new song you've been working on actually is!</p>
+                <p>Just upload a .wav -version of your song below and click submit to create a review for it.</p>
+                <p>The application will anlyse the audio properties of the song and generate a numerical score for it on a scale of 1 to 5.</p>
+                <p>You will also receive a textual review of the song, along with a list of words that most closely
+                describe the song. To top it off, you will receive a list of similar songs and the option to
+                predict the success of your song in terms of Youtube views and likes.</p>
+              </Message>
+              <Form onSubmit={this.submitForm}>
+                <Label attached="top left" color="teal" htmlFor="uploader" pointing="below">Select a song</Label>
+                <Input id="uploader" accept=".wav" type="file" onChange={this.handleChange} />
+                <Button color="blue" content="submit" type="submit" />
+              </Form>
+            </Grid.Column>
+          </Grid.Row>
         <Grid.Row>
+          <Dimmer active={loading} inverted={true}>
+            <Loader />
+          </Dimmer>
         {song ?
         <Grid.Column>
           <Header as="h2" content="Attributes of your song" /> 
@@ -160,7 +170,7 @@ class App extends Component {
           <Header as="h2" content="Song review" />
           <Header as="h3" content={`Score: ${song.score}/5`} />
           <Header as="h3">
-            Tags related to this song: {song.tags.map(tag => <Label>{tag}</Label>)}
+            Tags related to this song: {song.tags.map(tag => <Label color="violet" size="large">{tag}</Label>)}
           </Header>
           <Segment>
               {song.review.map(i => <div key={i}>{i}</div>) }
@@ -170,152 +180,159 @@ class App extends Component {
               {song.similar_songs.map(s => <div key={s.title}>{s.artist} - {s.title} ({s.genre})</div>)}
           </Segment>
           {youtubePredictions 
-            ? <Header as="h3" content={`Estimated popularity:
-            ${Math.floor(youtubePredictions.views)} views on Youtube, with
-            ${Math.floor(youtubePredictions.likes)} likes and
-            ${Math.floor(youtubePredictions.dislikes)} dislikes`} />
-            : <Header as="h3">
-                The popularity of your song is not yet calculated
-                <Button content="click here to calculate!" onClick={this.getYoutubeViews}/>
-              </Header>}
+            ? <Header as="h3"> 
+                Estimated popularity:
+                <p>{Math.floor(youtubePredictions.views)} views on Youtube</p>
+                <p>{Math.floor(youtubePredictions.likes)} <Icon name="thumbs up" /> likes</p>
+                <p>{Math.floor(youtubePredictions.dislikes)} <Icon name="thumbs down" /> dislikes</p>
+              </Header>
+            : <div>
+                <Header as="h3" content="The popularity of your song is not yet calculated" />
+                <Button color="red" content="Youtube views!" onClick={this.getYoutubeViews}/>
+              </div>}
         </Grid.Column>
         : undefined}
         <Grid.Column>
-          <Form onSubmit={this.submitAttributes}>
-            <Header as="h2">
-              Get review by custom attributes <Button content="submit attributes" /></Header>
-            <List>
-              <List.Item>
-                average_loudness:
-                <input
-                  name='average_loudness'
-                  type="range"
-                  min={0}
-                  max={1}
-                  step={0.01}
-                  value={customValues.average_loudness}
-                  onChange={this.changeValue}
-                /> {customValues.average_loudness}
-              </List.Item>
-              <List.Item>
-                dissonance:
-                <input
-                  name='dissonance'
-                  type="range"
-                  min={0}
-                  max={1}
-                  step={0.01}
-                  value={customValues.dissonance}
-                  onChange={this.changeValue}
-                /> {customValues.dissonance}
-              </List.Item>
-              <List.Item>
-                pitch_salience:
-                <input
-                  name='pitch_salience'
-                  type="range"
-                  min={0}
-                  max={1}
-                  step={0.01}
-                  value={customValues.pitch_salience}
-                  onChange={this.changeValue}
-                />{customValues.pitch_salience}
-              </List.Item>
-              <List.Item>
-                spectral_complexity:
-                <input
-                  name='spectral_complexity'
-                  type="range"
-                  min={0}
-                  max={50}
-                  step={0.1}
-                  value={customValues.spectral_complexity}
-                  onChange={this.changeValue}
-                /> {customValues.spectral_complexity}
-              </List.Item>
-              <List.Item>
-                chords_key:
-                <input
-                  name='chords_key'
-                  type="text"
-                  value={customValues.chords_key}
-                  onChange={this.changeValue}
-                />
-              </List.Item>
-              <List.Item>
-                tuning_frequency:
-                <input
-                  name='tuning_frequency'
-                  type="range"
-                  min={0}
-                  max={600}
-                  step={1}
-                  value={customValues.tuning_frequency}
-                  onChange={this.changeValue}
-                /> {customValues.tuning_frequency}
-              </List.Item>
-              <List.Item>
-                chords_strength:
-                <input
-                  name='chords_strength'
-                  type="range"
-                  min={0}
-                  max={1}
-                  step={0.01}
-                  value={customValues.chords_strength}
-                  onChange={this.changeValue}
-                /> {customValues.chords_strength}
-              </List.Item>
-              <List.Item>
-                bpm:
-                <input
-                  name='bpm'
-                  type="range"
-                  min={0}
-                  max={300}
-                  step={1}
-                  value={customValues.bpm}
-                  onChange={this.changeValue}
-                /> {customValues.bpm}
-              </List.Item>
-              <List.Item>
-                danceability:
-                <input
-                  name='danceability'
-                  type="range"
-                  min={0}
-                  max={2}
-                  step={0.01}
-                  value={customValues.danceability}
-                  onChange={this.changeValue}
-                /> {customValues.danceability}
-              </List.Item>
-              <List.Item>
-                beats_count:
-                <input
-                  name='beats_count'
-                  type="range"
-                  min={0}
-                  max={500}
-                  step={1}
-                  value={customValues.beats_count}
-                  onChange={this.changeValue}
-                /> {customValues.beats_count}
-              </List.Item>
-              <List.Item>
-                length:
-                <input
-                  name='length'
-                  type="range"
-                  min={0}
-                  max={500}
-                  step={1}
-                  value={customValues.length}
-                  onChange={this.changeValue}
-                /> {customValues.length}
-              </List.Item>
-            </List>
-          </Form>
+          <Segment>
+            <p>In case you don't have a song available, but want to test the song-reviewer,
+            you can insert some audio properties and see how a song with those properties would fare.
+            You can also first analyse your own song, check it's properties and then tune them a bit to see how these changes would affect the results.</p>
+            <Form onSubmit={this.submitAttributes}>
+              <Header as="h3">
+                Get review by custom attributes <Button content="submit attributes" /></Header>
+              <List>
+                <List.Item>
+                  average_loudness:
+                  <input
+                    name='average_loudness'
+                    type="range"
+                    min={0}
+                    max={1}
+                    step={0.01}
+                    value={customValues.average_loudness}
+                    onChange={this.changeValue}
+                  /> {customValues.average_loudness}
+                </List.Item>
+                <List.Item>
+                  dissonance:
+                  <input
+                    name='dissonance'
+                    type="range"
+                    min={0}
+                    max={1}
+                    step={0.01}
+                    value={customValues.dissonance}
+                    onChange={this.changeValue}
+                  /> {customValues.dissonance}
+                </List.Item>
+                <List.Item>
+                  pitch_salience:
+                  <input
+                    name='pitch_salience'
+                    type="range"
+                    min={0}
+                    max={1}
+                    step={0.01}
+                    value={customValues.pitch_salience}
+                    onChange={this.changeValue}
+                  />{customValues.pitch_salience}
+                </List.Item>
+                <List.Item>
+                  spectral_complexity:
+                  <input
+                    name='spectral_complexity'
+                    type="range"
+                    min={0}
+                    max={50}
+                    step={0.1}
+                    value={customValues.spectral_complexity}
+                    onChange={this.changeValue}
+                  /> {customValues.spectral_complexity}
+                </List.Item>
+                <List.Item>
+                  chords_key:
+                  <input
+                    name='chords_key'
+                    type="text"
+                    value={customValues.chords_key}
+                    onChange={this.changeValue}
+                  />
+                </List.Item>
+                <List.Item>
+                  tuning_frequency:
+                  <input
+                    name='tuning_frequency'
+                    type="range"
+                    min={0}
+                    max={600}
+                    step={1}
+                    value={customValues.tuning_frequency}
+                    onChange={this.changeValue}
+                  /> {customValues.tuning_frequency}
+                </List.Item>
+                <List.Item>
+                  chords_strength:
+                  <input
+                    name='chords_strength'
+                    type="range"
+                    min={0}
+                    max={1}
+                    step={0.01}
+                    value={customValues.chords_strength}
+                    onChange={this.changeValue}
+                  /> {customValues.chords_strength}
+                </List.Item>
+                <List.Item>
+                  bpm:
+                  <input
+                    name='bpm'
+                    type="range"
+                    min={0}
+                    max={300}
+                    step={1}
+                    value={customValues.bpm}
+                    onChange={this.changeValue}
+                  /> {customValues.bpm}
+                </List.Item>
+                <List.Item>
+                  danceability:
+                  <input
+                    name='danceability'
+                    type="range"
+                    min={0}
+                    max={2}
+                    step={0.01}
+                    value={customValues.danceability}
+                    onChange={this.changeValue}
+                  /> {customValues.danceability}
+                </List.Item>
+                <List.Item>
+                  beats_count:
+                  <input
+                    name='beats_count'
+                    type="range"
+                    min={0}
+                    max={500}
+                    step={1}
+                    value={customValues.beats_count}
+                    onChange={this.changeValue}
+                  /> {customValues.beats_count}
+                </List.Item>
+                <List.Item>
+                  length:
+                  <input
+                    name='length'
+                    type="range"
+                    min={0}
+                    max={500}
+                    step={1}
+                    value={customValues.length}
+                    onChange={this.changeValue}
+                  /> {customValues.length}
+                </List.Item>
+              </List>
+            </Form>
+          </Segment>
         </Grid.Column>
         </Grid.Row>
         </Grid>
